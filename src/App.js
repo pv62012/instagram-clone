@@ -55,15 +55,31 @@ function App() {
       unsubscribe();
     }
   }, [user]);
-
+  
   useEffect(() => {
+    //we add a uid for each post and by this we can show its for a particular user that sign in
+    // db.collection("posts")
+    //   .where("uid", "==", user.uid)
+    //   .onSnapshot((snapshot) => {
+    //     setPost(
+    //       snapshot.docs.map((doc) => ({
+    //         id: doc.id,
+    //         posts: doc.data(),
+    //       }))
+    //     );
+    //   });
     db.collection('posts').orderBy('timestamp','desc').onSnapshot(snapshot => {
       setPost(snapshot.docs.map(doc => ({
         id:doc.id,
         posts: doc.data()
       })));
     })
-    
+    // db.collection('users').doc(user.uid).collection('posts').onSnapshot(snapshot => {
+    //   setPost(snapshot.docs.map(doc => ({
+    //     id: doc.id,
+    //     posts:doc.data()
+    //   })))
+    // })
     // return () => {
     //   cleanup
     // }
@@ -222,7 +238,7 @@ function App() {
       ))}
 
       {user?.displayName ? (
-        <ImageUpload username={user.displayName} />
+        <ImageUpload username={user.displayName} uid={ user.uid}/>
       ) : (
         <h3>Sorry you need to Signin For upload posts </h3>
       )}

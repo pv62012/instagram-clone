@@ -4,7 +4,7 @@ import { storage,db } from '../firebase'
 import firebase from "firebase";
 import './ImageUpload.css'
 
-function ImageUpload({username}) {
+function ImageUpload({username, uid}) {
     const [caption, setCaption] = useState('')
     const [image, setImage] = useState(null)
     const [progress, setProgress] = useState(0)
@@ -37,12 +37,22 @@ function ImageUpload({username}) {
                     .getDownloadURL()
                     .then(url => {
                     //post image inside db
-                        db.collection("posts").add({
+                        
+                        db
+                          .collection("posts")
+                          .add({
                             timestamp: firebase.firestore.FieldValue.serverTimestamp(),
                             caption: caption,
                             imageUrl: url,
-                            username: username
-                        });
+                              username: username,
+                            uid:uid
+                          });
+                        // db.collection("users").doc(uid).collection("posts").add({
+                        //     timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                        //     caption: caption,
+                        //     imageUrl: url,
+                        //     username: username
+                        // });   this is not need more bcz we add a uid for each post and by this we can show its for a particular user that sign in 
                         setProgress(0);
                         setCaption("");
                         setImage(null);
