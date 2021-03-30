@@ -56,6 +56,7 @@ function App() {
     }
   }, [user]);
   
+  //always use onSnapShot for realtime updates 
   useEffect(() => {
     //we add a uid for each post and by this we can show its for a particular user that sign in
     // db.collection("posts")
