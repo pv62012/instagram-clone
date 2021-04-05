@@ -42,7 +42,7 @@ function App() {
     const unsubscribe=auth.onAuthStateChanged((authUser) => {
       if (authUser) {
          //user has logged in
-        console.log(authUser);
+        // console.log(authUser);
         setUser(authUser);
        
       } else {
@@ -58,6 +58,7 @@ function App() {
   
   //always use onSnapShot for realtime updates 
   useEffect(() => {
+    let unsubscribe;
     //we add a uid for each post and by this we can show its for a particular user that sign in
     // db.collection("posts")
     //   .where("uid", "==", user.uid)
@@ -69,7 +70,12 @@ function App() {
     //       }))
     //     );
     //   });
-    db.collection('posts').orderBy('timestamp','desc').onSnapshot(snapshot => {
+
+
+    // whenever you will not get any post then please check first firebase secuirty rules  
+    
+    unsubscribe = db.collection('posts').orderBy('timestamp', 'desc').onSnapshot(snapshot => {
+      console.log(" i am excetubale");
       setPost(snapshot.docs.map(doc => ({
         id:doc.id,
         posts: doc.data()
@@ -81,9 +87,9 @@ function App() {
     //     posts:doc.data()
     //   })))
     // })
-    // return () => {
-    //   cleanup
-    // }
+    return () => {
+      unsubscribe()
+    }
   }, []) 
 
 
@@ -112,6 +118,7 @@ function App() {
   //modal style and animation end
   return (
     <div className="app">
+      {console.log(post.length)}
       <header className="app_header">
         <img className="app_headerImage" src="/images/namasteLogoB.png" />
 
